@@ -11,53 +11,53 @@ from app.models.task import Task
 from app.schemas import CreateUser , UpdateUser
 
 
-router = APIRouter ( )
+router = APIRouter()
 
 
-@router.get ( "/" )
-async def all_users ( db: Annotated [ Session , Depends ( get_db ) ] ) :
-    query = select ( User )
-    result = db.scalars ( query ).all ( )
+@router.get("/")
+async def all_users (db:Annotated[Session, Depends(get_db)]):
+    query = select (User)
+    result = db.scalars(query).all()
     return result
 
 
-@router.get ( "/{user_id}" )
-async def user_by_id ( user_id: int , db: Annotated [ Session , Depends ( get_db ) ] ) :
-    query = select ( User ).where ( User.id == user_id )
-    user = db.scalars ( query ).first ( )
-    if user is not None :
+@router.get("/{user_id}")
+async def user_by_id(user_id:int, db:Annotated[Session,Depends(get_db)]):
+    query = select(User).where(User.id == user_id)
+    user = db.scalars(query).first()
+    if user is not None:
         return user
-    raise HTTPException ( status_code = status.HTTP_404_NOT_FOUND , detail = "User was not found" )
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User was not found")
 
 
-@router.post ( "/create" )
-async def create_user ( user: CreateUser , db: Annotated [ Session , Depends ( get_db ) ] ) :
-    existing_user = db.scalars ( select ( User ).where ( User.username == user.username ) ).first ( )
-    if existing_user :
-        raise HTTPException ( status_code = status.HTTP_400_BAD_REQUEST , detail = "Username already exists" )
-    user_data = user.model_dump ( )
-    user_data [ "slug" ] = slugify ( user.username )
-    query = insert ( User ).values ( **user_data )
-    db.execute ( query )
-    db.commit ( )
-    return { "status_code" : status.HTTP_201_CREATED , "transaction" : "Successful" }
+@router.post("/create")
+async def create_user(user:CreateUser, db:Annotated[Session, Depends(get_db)]):
+    existing_user = db.scalars(select(User).where(User.username == user.username)).first()
+    if existing_user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists")
+    user_data = user.model_dump()
+    user_data["slug"] = slugify(user.username)
+    query = insert(User).values(**user_data)
+    db.execute(query)
+    db.commit()
+    return {"status_code": status.HTTP_201_CREATED, "transaction": "Successful"}
 
 
 
-@router.put ( "/update/{user_id}" )
-async def update_user ( user_id: int , user: UpdateUser , db: Annotated [ Session , Depends ( get_db ) ] ) :
-    query = select ( User ).where ( User.id == user_id )
-    existing_user = db.scalars ( query ).first ( )
-    if existing_user :
+@router.put("/update/{user_id}")
+async def update_user(user_id:int, user:UpdateUser, db: Annotated[Session, Depends(get_db)]):
+    query = select(User).where (User.id == user_id)
+    existing_user = db.scalars(query).first()
+    if existing_user:
         update_query = (
-            update ( User )
-            .where ( User.id == user_id )
-            .values ( **user.model_dump ( ) )
+            update(User)
+            .where(User.id == user_id)
+            .values(**user.model_dump())
         )
-        db.execute ( update_query )
-        db.commit ( )
-        return { "status_code" : status.HTTP_200_OK , "transaction" : "User update is successful!" }
-    raise HTTPException ( status_code = status.HTTP_404_NOT_FOUND , detail = "User was not found" )
+        db.execute(update_query)
+        db.commit()
+        return {"status_code": status.HTTP_200_OK, "transaction": "User update is successful!"}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User was not found")
 
 
 
