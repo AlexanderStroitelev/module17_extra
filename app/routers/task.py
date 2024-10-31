@@ -11,7 +11,7 @@ from app.schemas import CreateTask , UpdateTask
 from slugify import slugify
 
 
-router = APIRouter ( )
+router = APIRouter()
 
 
 @router.get("/")
