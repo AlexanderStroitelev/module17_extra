@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get("/")
-async def all_users (db:Annotated[Session, Depends(get_db)]):
+async def all_users(db:Annotated[Session, Depends(get_db)]):
     query = select (User)
     result = db.scalars(query).all()
     return result
