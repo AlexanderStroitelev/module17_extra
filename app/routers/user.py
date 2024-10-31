@@ -22,7 +22,7 @@ async def all_users(db:Annotated[Session, Depends(get_db)]):
 
 
 @router.get("/{user_id}")
-async def user_by_id(user_id:int, db:Annotated[Session,Depends(get_db)]):
+async def user_by_id(user_id:int, db:Annotated[Session, Depends(get_db)]):
     query = select(User).where(User.id == user_id)
     user = db.scalars(query).first()
     if user is not None:
