@@ -1,14 +1,14 @@
 from typing import Annotated
 
-from fastapi import APIRouter , Depends , status , HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException
 from slugify import slugify
-from sqlalchemy import insert , select , update , delete
+from sqlalchemy import insert, select, update, delete
 from sqlalchemy.orm import Session
 
 from app.backend.db_depends import get_db
 from app.models.user import User
 from app.models.task import Task
-from app.schemas import CreateUser , UpdateUser
+from app.schemas import CreateUser, UpdateUser
 
 
 router = APIRouter()

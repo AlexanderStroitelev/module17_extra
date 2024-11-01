@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter , Depends , status , HTTPException
-from sqlalchemy import insert , select , update , delete
+from fastapi import APIRouter, Depends, status, HTTPException
+from sqlalchemy import insert, select, update, delete
 from sqlalchemy.orm import Session
 
 from app.backend.db_depends import get_db
 from app.models.task import Task
 from app.models.user import User
-from app.schemas import CreateTask , UpdateTask
+from app.schemas import CreateTask, UpdateTask
 from slugify import slugify
 
 
