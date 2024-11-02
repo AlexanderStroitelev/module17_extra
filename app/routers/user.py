@@ -49,11 +49,7 @@ async def update_user(user_id:int, user:UpdateUser, db: Annotated[Session, Depen
     query = select(User).where (User.id == user_id)
     existing_user = db.scalars(query).first()
     if existing_user:
-        update_query = (
-            update(User)
-            .where(User.id == user_id)
-            .values(**user.model_dump())
-        )
+        update_query = (update(User).where(User.id == user_id).values(**user.model_dump()))
         db.execute(update_query)
         db.commit()
         return {"status_code": status.HTTP_200_OK, "transaction": "User update is successful!"}

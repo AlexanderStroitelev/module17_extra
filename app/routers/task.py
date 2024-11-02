@@ -49,11 +49,7 @@ async def update_task(task_id: int, task: UpdateTask, db: Annotated[Session, Dep
     query = select(Task).where(Task.id == task_id)
     existing_task = db.scalars(query).first()
     if existing_task:
-        update_query = (
-            update(Task)
-            .where(Task.id == task_id)
-            .values(**task.model_dump())
-        )
+        update_query = (update(Task).where(Task.id == task_id).values(**task.model_dump()))
         db.execute(update_query)
         db.commit()
         return {"status_code": status.HTTP_200_OK, "transaction": "Task update is successful!"}
